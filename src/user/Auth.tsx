@@ -1,10 +1,8 @@
-import React, { useState, FormEventHandler } from "react";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import store, { State } from "../store";
-import { fetchStatus } from "./slice";
+import React, { useState } from "react";
+import { gql, useQuery } from "@apollo/client";
 import styles from "./Auth.module.css";
 import SpotifyAuth from "../spotify/Auth";
+import { FetchUserStatus } from "../api/types";
 
 const Register = () => {
   const [usernameField, setUsernameField] = useState("");
@@ -106,10 +104,11 @@ const LoggedOut = () => (
   </>
 );
 
-const LoggedIn = () => {
+const LoggedIn = (props: { username: string }) => {
   return (
     <>
       <h3 className={styles.LoggedIn}>Logged in</h3>
+      <p>Username: {props.username}</p>
       <hr />
       <SpotifyAuth />
       <hr />
@@ -119,18 +118,20 @@ const LoggedIn = () => {
 };
 
 const Auth = () => {
-  const auth = useSelector((state: State) => state.auth);
+  const data = useQuery<FetchUserStatus>(gql`
+    query FetchUserStatus {
+      me {
+        username
+      }
+    }
+  `).data;
 
-  useEffect(() => {
-    (async () => {
-      await store.dispatch(fetchStatus());
-    })();
-  }, []);
+  const loggedIn = data?.me != null;
 
   return (
     <div>
       <h2>Account</h2>
-      {auth.loggedIn ? <LoggedIn /> : <LoggedOut />}
+      {loggedIn ? <LoggedIn username={data!.me!.username} /> : <LoggedOut />}
     </div>
   );
 };

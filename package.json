@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.15",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/axios": "^0.14.0",
+    "@types/graphql": "^14.5.0",
     "@types/http-proxy-middleware": "^1.0.0",
     "@types/http-status-codes": "^1.2.0",
     "@types/jest": "^26.0.15",
@@ -17,7 +19,9 @@
     "@types/react-helmet": "^6.1.2",
     "@types/react-router-dom": "^5.3.0",
     "@types/spotify-web-playback-sdk": "^0.1.11",
+    "apollo": "^2.33.6",
     "axios": "^0.21.4",
+    "graphql": "^15.6.0",
     "http-proxy-middleware": "^2.0.1",
     "http-status-codes": "^2.1.4",
     "react": "^17.0.2",
@@ -30,10 +34,14 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test",
+    "react-eject": "react-scripts eject",
+    "fetch-schema": "apollo client:download-schema --endpoint=http://localhost:8000/graphql/ schema.graphql",
+    "create-types": "apollo client:codegen --localSchemaFile=schema.graphql --target=typescript --addTypename --outputFlat src/api/types.d.ts",
+    "watch:create-types": "nodemon --exec yarn create-types",
+    "start": "npm-run-all --parallel react-start watch:create-types"
   },
   "eslintConfig": {
     "extends": [
@@ -54,6 +62,9 @@
     ]
   },
   "devDependencies": {
-    "redux-devtools": "^3.7.0"
+    "concurrently": "^6.2.2",
+    "npm-run-all": "^4.1.5",
+    "redux-devtools": "^3.7.0",
+    "yarn-run-all": "^3.1.1"
   }
 }

@@ -3,16 +3,20 @@ import ReactDOM from "react-dom";
 import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import store from "./store";
 import "./index.css";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+
+const apolloClient = new ApolloClient({
+  uri: "/graphql/",
+  cache: new InMemoryCache(),
+});
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
+      <ApolloProvider client={apolloClient}>
         <App />
-      </Provider>
+      </ApolloProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

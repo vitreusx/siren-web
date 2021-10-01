@@ -1,10 +1,6 @@
 import React from "react";
-import { FormEventHandler } from "react";
-import { fetchStatus, logOut } from "./authSlice";
-import store, { State } from "../store";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import styles from "./Auth.module.css";
+import { FetchSpotifyStatus } from "../api/types";
+import { gql, useQuery } from "@apollo/client";
 
 const LogIn = () => {
   return (
@@ -16,11 +12,6 @@ const LogIn = () => {
 };
 
 const LogOut = () => {
-  const onSubmit: FormEventHandler = async (e) => {
-    e.preventDefault();
-    await store.dispatch(logOut());
-  };
-
   return (
     <form method="POST" action="/auth/spotify/logout">
       <input type="hidden" name="redirect" value={window.location.href} />
@@ -29,9 +20,10 @@ const LogOut = () => {
   );
 };
 
-const LoggedIn = () => {
+const LoggedIn = (props: { token: string }) => {
   return (
     <div>
+      <p>Token: {props.token}</p>
       <LogOut />
     </div>
   );
@@ -46,19 +38,25 @@ const LoggedOut = () => {
 };
 
 const Auth = () => {
-  const userLoggedIn = useSelector((state: State) => state.auth.loggedIn);
-  const sfLoggedIn = useSelector((state: State) => state.sf.loggedIn);
+  const data = useQuery<FetchSpotifyStatus>(gql`
+    query FetchSpotifyStatus {
+      me {
+        sfAccessToken
+      }
+    }
+  `).data;
 
-  useEffect(() => {
-    (async () => {
-      store.dispatch(fetchStatus());
-    })();
-  }, [userLoggedIn]);
+  const sfLoggedIn = data?.me?.sfAccessToken != null;
+  console.log(data);
 
   return (
     <div>
       <h3>Spotify</h3>
-      {sfLoggedIn ? <LoggedIn /> : <LoggedOut />}
+      {sfLoggedIn ? (
+        <LoggedIn token={data!.me!.sfAccessToken!} />
+      ) : (
+        <LoggedOut />
+      )}
     </div>
   );
 };
