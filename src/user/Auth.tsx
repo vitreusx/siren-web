@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import styles from "./Auth.module.css";
 import SpotifyAuth from "../spotify/Auth";
-import { FetchUserStatus } from "../api/types";
+import Library from "../library/Library";
+import { FetchUserStatus } from "./__generated__/FetchUserStatus";
 
 const Register = () => {
   const [usernameField, setUsernameField] = useState("");
@@ -112,19 +113,23 @@ const LoggedIn = (props: { username: string }) => {
       <hr />
       <SpotifyAuth />
       <hr />
+      <Library />
+      <hr />
       <LogOut />
     </>
   );
 };
 
-const Auth = () => {
-  const data = useQuery<FetchUserStatus>(gql`
-    query FetchUserStatus {
-      me {
-        username
-      }
+const FETCH_USER_STATUS = gql`
+  query FetchUserStatus {
+    me {
+      username
     }
-  `).data;
+  }
+`;
+
+const Auth = () => {
+  const data = useQuery<FetchUserStatus>(FETCH_USER_STATUS).data;
 
   const loggedIn = data?.me != null;
 

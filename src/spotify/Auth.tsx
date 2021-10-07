@@ -1,6 +1,7 @@
 import React from "react";
-import { FetchSpotifyStatus } from "../api/types";
+import { FetchSpotifyStatus } from "./__generated__/FetchSpotifyStatus";
 import { gql, useQuery } from "@apollo/client";
+import styles from "./Auth.module.css";
 
 const LogIn = () => {
   return (
@@ -23,7 +24,9 @@ const LogOut = () => {
 const LoggedIn = (props: { token: string }) => {
   return (
     <div>
-      <p>Token: {props.token}</p>
+      <p className={styles.AuthToken}>
+        Token: <code>{props.token}</code>
+      </p>
       <LogOut />
     </div>
   );
@@ -38,16 +41,17 @@ const LoggedOut = () => {
 };
 
 const Auth = () => {
-  const data = useQuery<FetchSpotifyStatus>(gql`
+  const FETCH_SPOTIFY_STATUS = gql`
     query FetchSpotifyStatus {
       me {
         sfAccessToken
       }
     }
-  `).data;
+  `;
+
+  const data = useQuery<FetchSpotifyStatus>(FETCH_SPOTIFY_STATUS).data;
 
   const sfLoggedIn = data?.me?.sfAccessToken != null;
-  console.log(data);
 
   return (
     <div>
