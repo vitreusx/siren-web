@@ -4,14 +4,14 @@ module.exports = function (app) {
   app.use(
     "/auth/**",
     createProxyMiddleware({
-      target: "http://localhost:8000",
+      target: process.env.API_SERVER,
       changeOrigin: true
     })
   );
   app.use(
     "/graphql/**",
     createProxyMiddleware({
-      target: "http://localhost:8000",
+      target: process.env.API_SERVER,
       changeOrigin: true
     })
   )

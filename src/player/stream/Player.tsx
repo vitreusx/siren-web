@@ -25,6 +25,7 @@ const Player = () => {
             setCurrentStreamUrl(streamUrl);
           }
 
+          console.log(target);
           await target.play();
           break;
         }
