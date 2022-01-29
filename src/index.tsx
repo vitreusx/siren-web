@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 const apolloClient = new ApolloClient({
-  uri: "/graphql/",
+  uri: `${process.env.REACT_APP_API_SERVER}/graphql/`,
   cache: new InMemoryCache(),
 });
 

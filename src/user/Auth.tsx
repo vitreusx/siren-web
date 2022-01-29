@@ -5,6 +5,8 @@ import SpotifyAuth from "../spotify/Auth";
 import Library from "../library/Library";
 import { FetchUserStatus } from "./__generated__/FetchUserStatus";
 
+const REGISTER_PATH = `${process.env.REACT_APP_AUTH_SERVER}/auth/user/register`;
+
 const Register = () => {
   const [usernameField, setUsernameField] = useState("");
   const [password, setPassword] = useState("");
@@ -12,7 +14,7 @@ const Register = () => {
   return (
     <div>
       <h2>Register</h2>
-      <form method="POST" action="/auth/user/register">
+      <form method="POST" action={REGISTER_PATH}>
         <input name="redirect" type="hidden" value={window.location.href} />
         <label>
           Username:{" "}
@@ -40,6 +42,8 @@ const Register = () => {
   );
 };
 
+const LOGIN_PATH = `${process.env.REACT_APP_AUTH_SERVER}/auth/user/login`;
+
 const LogIn = () => {
   const [usernameField, setUsernameField] = useState("");
   const [password, setPassword] = useState("");
@@ -48,7 +52,7 @@ const LogIn = () => {
   return (
     <div>
       <h2>Log in</h2>
-      <form method="POST" action="/auth/user/login">
+      <form method="POST" action={LOGIN_PATH}>
         <input name="redirect" type="hidden" value={window.location.href} />
         <label>
           Username:{" "}
@@ -86,10 +90,12 @@ const LogIn = () => {
   );
 };
 
+const LOGOUT_PATH = `${process.env.REACT_APP_AUTH_SERVER}/auth/user/logout`;
+
 const LogOut = () => {
   return (
     <div>
-      <form method="POST" action="/auth/user/logout">
+      <form method="POST" action={LOGOUT_PATH}>
         <input name="redirect" type="hidden" value={window.location.href} />
         <input type="submit" value="Log out" />
       </form>
